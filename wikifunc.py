@@ -326,8 +326,8 @@ def definitions_postprocessing(definitions): # BUG: pouzit rozsirena pravidla pr
             if definition[0][0][0] == 'N' and definition[0][0][4] != '1' and definition[0][0][4] != '7': # definice zacina na N23456 - preskocit
                 continue
             # bacha, tohle je hodne nebezpecne. Musi v ni byt N17 - viz limit definitions, neni nejspis moc dulezite na co zacina.
-            # XXXXX elif definition[0][0][0] != 'P' and definition[0][0][0] != 'V' and definition[0][0][0] != 'D' and definition[0][0][0] != 'T' and not(definition[0][0][0] == 'C' and definition[0][0][1] == '='):
-            # XXXXX   new_definitions.append(definition) # definice nezacina na TPVDC=, tak ji pridej
+            #elif definition[0][0][0] != 'P' and definition[0][0][0] != 'V' and definition[0][0][0] != 'D' and definition[0][0][0] != 'T' and not(definition[0][0][0] == 'C' and definition[0][0][1] == '='):
+            #   new_definitions.append(definition) # definice nezacina na TPVDC=, tak ji pridej
             elif definition[0][0][0] == 'D': # zacinala na prislovce
                 for d in definition:
                     if d[0][0] == 'N' and d[0][1] == 'N' and (d[0][4] == '1' or d[0][4] == '7'):
@@ -337,6 +337,8 @@ def definitions_postprocessing(definitions): # BUG: pouzit rozsirena pravidla pr
                 if found_noun:
                     new_definitions.append(new_definition)
                 new_definition = []
+            else: # prozatimni nahrada TPVDC=, treba to nebude fungovat tak kdyztak dat zpatky
+                new_definitions.append(definition)
 
             found_noun = False
 
