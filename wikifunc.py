@@ -415,10 +415,10 @@ def cut_by_n2(definitions): # zkracuje: N1 ... N2 |CUT
     for definition in definitions:
         for d in definition:
             if found_noun_n2:
-                if d[0][0] == 'N' and d[0][1] == 'N' and d[0][4] == '2': # dohledej zbytek N2
+                if d[0][0] == 'A' or (d[0][0] == 'N' and d[0][1] == 'N' and d[0][4] == '2'): # dohledej zbytek N2 nebo A
                     new_definition.append(d)
                     continue
-                else: # pokud uz nejsou N2, utni to
+                else: # pokud uz nejsou N2 ani A, utni to
                     break
             elif found_noun: # "oblast .." ocekavam N2 nebo neco jineho
                 if d[0][0] == 'N' and d[0][1] == 'N' and d[0][4] == '2': # naslo to N2, pokracovat dokud je to nepobere vsechny
@@ -821,24 +821,7 @@ def get_setup(words_list, whole_sentence, title_lemmas_list, title_tags_list, o)
         elif word[1].encode('utf-8') == 'k-1':
             cntAnalysis3 = True
 
-## PERSON
-    bad_fall = False # spatny pad ve jmenu
-    analyse = False
-    a = 0
-    for title_lemma in title_lemmas_list: # analyza Person
-        if re.match(o.re_person_title, title_lemma):      
-            analyse = True
-            break
-    if analyse:      
-        for tag in title_tags_list: # NEW - tag[4] == '1'        
-            if (tag[0] == 'N' and (tag[4] == '1' or tag[4] == 'X')) or tag[0] == 'C' or tag[0] == 'R' or tag[0] == 'Z': # momentalni povolene typy, pridat do budoucna pri zjisteni nejakych nestandartnich jmen, vylouceno (tag[0] == 'A' and tag[4] != 'U') 
-                a += 1
-            if tag[0] != 'Z' and tag[0] != 'C' and tag[4] != '1' and tag[4] != 'X': # zjistit, jestli neni ve spatnem padu
-                bad_fall = True
-        if a == len(title_tags_list) and not bad_fall:
-            return 'P'
-
-## LOCATION
+    ## LOCATION
 
     n = 0 # pocet podst. jmen mezi 'byt' a klicovym podst. jmenem
     analyse = False # co nasleduje po slove 'byt'
@@ -856,6 +839,25 @@ def get_setup(words_list, whole_sentence, title_lemmas_list, title_tags_list, o)
                      return 'L'
         if analyse:
             break
+
+    ## PERSON
+    bad_fall = False  # spatny pad ve jmenu
+    analyse = False
+    a = 0
+    for title_lemma in title_lemmas_list:  # analyza Person
+        if re.match(o.re_person_title, title_lemma):
+            analyse = True
+            break
+    if analyse:
+        for tag in title_tags_list:  # NEW - tag[4] == '1'
+            if (tag[0] == 'N' and (tag[4] == '1' or tag[4] == 'X')) or tag[0] == 'C' or tag[0] == 'R' or tag[
+                0] == 'Z':  # momentalni povolene typy, pridat do budoucna pri zjisteni nejakych nestandartnich jmen, vylouceno (tag[0] == 'A' and tag[4] != 'U')
+                a += 1
+            if tag[0] != 'Z' and tag[0] != 'C' and tag[4] != '1' and tag[
+                4] != 'X':  # zjistit, jestli neni ve spatnem padu
+                bad_fall = True
+        if a == len(title_tags_list) and not bad_fall:
+            return 'P'
 
     return ''
 
@@ -1008,3 +1010,7 @@ def wiki_to_text(raw_text, title, o): # return 1 = chyba return 2 = blby obsah s
         return 1
 
 ################################ FUNC_END #################################
+
+# dodelat jen pokud to k necemu cele bude:
+# zjistene problemy patek: jeden z + 2. pad = dodelat, prepsani pravidla o N17, celkovy override vsech funkci
+# "ktery" na zacatku vety, pridat do filtru processing: zajmeno
