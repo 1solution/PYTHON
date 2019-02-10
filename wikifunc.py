@@ -822,7 +822,6 @@ def get_setup(words_list, whole_sentence, title_lemmas_list, title_tags_list, o)
             cntAnalysis3 = True
 
     ## LOCATION
-
     n = 0 # pocet podst. jmen mezi 'byt' a klicovym podst. jmenem
     analyse = False # co nasleduje po slove 'byt'
     oneSentence = False # rozsah klicove fraze pouze v jedne vete
@@ -841,23 +840,42 @@ def get_setup(words_list, whole_sentence, title_lemmas_list, title_tags_list, o)
             break
 
     ## PERSON
-    bad_fall = False  # spatny pad ve jmenu
+    bad_fall = False # spatny pad ve jmenu
     analyse = False
     a = 0
+    half = 0
     for title_lemma in title_lemmas_list:  # analyza Person
         if re.match(o.re_person_title, title_lemma):
             analyse = True
+            half = half + 1
             break
-    if analyse:
-        for tag in title_tags_list:  # NEW - tag[4] == '1'
-            if (tag[0] == 'N' and (tag[4] == '1' or tag[4] == 'X')) or tag[0] == 'C' or tag[0] == 'R' or tag[
-                0] == 'Z':  # momentalni povolene typy, pridat do budoucna pri zjisteni nejakych nestandartnich jmen, vylouceno (tag[0] == 'A' and tag[4] != 'U')
+    if analyse and (half > float(len(title_lemmas_list))/2): # spravne regexy jmen musi tvorit vic nez polovinu slov v nazvu
+        for tag in title_tags_list:
+            if (tag[0] == 'N' and (tag[4] == '1' or tag[4] == 'X')) or tag[0] == 'C' or tag[0] == 'R' or tag[0] == 'Z':  # momentalni povolene typy, pridat do budoucna pri zjisteni nejakych nestandartnich jmen, vylouceno (tag[0] == 'A' and tag[4] != 'U')
                 a += 1
-            if tag[0] != 'Z' and tag[0] != 'C' and tag[4] != '1' and tag[
-                4] != 'X':  # zjistit, jestli neni ve spatnem padu
+            if tag[0] != 'Z' and tag[0] != 'C' and tag[4] != '1' and tag[4] != 'X':  # zjistit, jestli neni ve spatnem padu
                 bad_fall = True
         if a == len(title_tags_list) and not bad_fall:
             return 'P'
+
+    # specialni produkt a organization override, pokud to dojelo sem
+    prod = False
+    komp = False
+    some = False
+    for title_lemma in title_lemmas_list:
+        if re.match(o.re_product_title, title_lemma):
+            prod = True
+            some = True
+        if re.match(o.re_company_title, title_lemma):
+            komp = True
+            some = True
+    if some: # aby to neprobihalo pokazde
+        if prod and komp:
+            return 'R'
+        elif prod:
+            return 'R'
+        else:
+            return 'O'
 
     return ''
 

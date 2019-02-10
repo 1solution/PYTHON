@@ -32,19 +32,19 @@ re_bad_sentence = re.compile(u'.*(moci_\^\(mít_možnost_\[něco_dělat\]\)\|bý
 
 bad_title = re.compile(u'^(Nápověda|Wikipedie|Kategorie|Šablona|MediaWiki|Wikipedista|Modul|Portál):\s*[\w]+', re.UNICODE)
 bad_date = re.compile(u'^\d\d?\d?\d?\s*(př\.\s*n\.\s*l\.\s*)?$', re.UNICODE)
-bad_title_dir = re.compile(u'^[\w]+\s*\(rozcestník\)', re.UNICODE)
+bad_title_dir = re.compile(u'^[\w]+\s*\((rozcestník|příjmení)\)', re.UNICODE)
 bad_title_list = re.compile(u'[S,s]eznam\s+[\w]+', re.UNICODE)
 bad_letter = re.compile(u'^\w$', re.UNICODE)
 
 re_event_title = re.compile(u'.*[M,m]istrovství.*', re.UNICODE)
-#re_product_title = re.compile(u'\w+_;R(_,t)?', re.UNICODE)
-#re_company_title = re.compile(u'\w+_;K(_,t)?', re.UNICODE)
+re_product_title = re.compile(u'\w+_;R(_,t)?', re.UNICODE)
+re_company_title = re.compile(u'\w+_;K(_,t)?', re.UNICODE)
 re_person_title = re.compile(u'\w+_;[S,Y](_,t)?', re.UNICODE)
 re_company = re.compile(u'^(společnost_\^\(\*3ý\)|firma|organizace|korporace|federace|koncern|církev|klub|pakt|podnik|spolek|aliance|iniciativa|družstvo|sdružení_\^\(\*3it\))$', re.UNICODE)
 re_connect = re.compile(u'který|jenž_\^\(který\.\.\.\[ve_vedl\._větě\]\)|jenž_\^\(který_\[ve_vedl\.větě\]\)', re.UNICODE)
 re_product_maker = re.compile(u'společnost_\^\(\*3ý\)|firma', re.UNICODE)
-re_location = re.compile(u'^(město|obec|ulice|stát-1_\^\(státní_útvar\)|kraj|okres|republika|region|země|ostrov|kontinent|území|městys|knížectví|království|vádí_,t|údolí|prefektura)$', re.UNICODE)
-re_art = re.compile(u'^(dílo_\^\(umělecké,_vědecké,\.\.\.\)|píseň|kniha|socha|balada|opera|opereta|album|trilogie|báseň|povídka|bible|deník|skladba|hymna|thriller|kresba|malba|olejomalba|román|komiks|obraz|komedie|film|drama|čtrnáctideník|týdeník|časopis|měsíčník-2\_\^\(časopis\))$', re.UNICODE)
+re_location = re.compile(u'^(město|obec|ulice|stát-1_\^\(státní_útvar\)|kraj|okres|republika|region|země|ostrov|řeka|potok|jezero|moře|poloostrov|záliv|průliv|pleso|kontinent|území|městys|knížectví|království|vádí_,t|údolí|prefektura)$', re.UNICODE)
+re_art = re.compile(u'^(dílo_\^\(umělecké,_vědecké,\.\.\.\)|píseň|kniha|socha|balada|opera|opereta|album|trilogie|báseň|povídka|bible|deník|skladba|hymna|thriller|kresba|malba|olejomalba|román|komiks|obraz|komedie|film|seriál|drama|čtrnáctideník|týdeník|časopis|měsíčník-2\_\^\(časopis\))$', re.UNICODE)
 re_event = re.compile(u'^(událost_,a_\^\(\*3ý\)|revoluce|akce|expedice|mise|šampionát|soutěž|mistrovství)$', re.UNICODE)
 re_product = re.compile(u'^(výrobek|služba|produkt|model|značka|licence|série|hra_\^\(dětská;_v_divadle;\.\.\.\))$', re.UNICODE)
 
@@ -77,7 +77,7 @@ if not morpho:
   sys.exit(1)
 
 class Args:
-    def __init__(self, IGNORE, tokenizer, forms, tokens, tagger, lemmas, re_bad_sentence, re_connect, re_product_maker, re_company, re_art, re_person_title, re_event_title, re_location, re_event, re_product, f, morpho, rr):
+    def __init__(self, IGNORE, tokenizer, forms, tokens, tagger, lemmas, re_bad_sentence, re_connect, re_product_maker, re_company, re_art, re_person_title, re_event_title, re_location, re_event, re_product, f, morpho, rr, re_product_title, re_company_title):
         self.IGNORE = IGNORE
         self.tokenizer = tokenizer
         self.forms = forms
@@ -97,8 +97,10 @@ class Args:
         self.f = f
         self.morpho = morpho
         self.rr = rr
+        self.re_product_title = re_product_title
+        self.re_company_title = re_company_title
 
-o = Args(IGNORE, tokenizer, forms, tokens, tagger, lemmas, re_bad_sentence, re_connect, re_product_maker, re_company, re_art, re_person_title, re_event_title, re_location, re_event, re_product, f, morpho, rr)
+o = Args(IGNORE, tokenizer, forms, tokens, tagger, lemmas, re_bad_sentence, re_connect, re_product_maker, re_company, re_art, re_person_title, re_event_title, re_location, re_event, re_product, f, morpho, rr, re_product_title, re_company_title)
 
 from wikifunc import *
 
