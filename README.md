@@ -1,0 +1,2 @@
+# Muzeum hanby 1
+Boze ja byl vul, fakt jsem si tehdy myslel ze wikipedie pujde parsovat ne pomoci uceni, ale pomoci predem navolenejch vetnejch struktur. Prestoze uz mi bylo za 14 dni bylo jasny ze to nejde, dal jsem tam tlacil dalsi funkce ktery analyzovaly vetnou strukturu ve spojeni s konkretnima slovama. Nechavam si to tu z nostalgickejch duvodu, je to hrozna vec (hned za tim parserem kterej teda nebyl muj a byl psanej jako jeden jedinej pythonovej regex co mel asi 5000 znaku).
